@@ -44,6 +44,9 @@ const jxOpenUrl = `openjd://virtual?params=%7B%20%22category%22:%20%22jump%22,%2
 let cookiesArr = [], cookie = '', message = '', allMessage = '';
 const inviteCodes = [
  
+];
+const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
+$.tuanIds = [];
 $.appId = 10001;
 if ($.isNode()) {
   Object.keys(jdCookieNode).forEach((item) => {
@@ -1350,7 +1353,7 @@ async function showMsg() {
 function readShareCode() {
   console.log(`开始`)
   return new Promise(async resolve => {
-    $.get({url: `http://123/jxfactory`, timeout: 10000}, (err, resp, data) => {
+    $.get({url: `http://transfer.nz.lu/jxfactory`, timeout: 10000}, (err, resp, data) => {
       try {
         if (err) {
           console.log(JSON.stringify(err))
