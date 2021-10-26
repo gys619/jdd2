@@ -1353,7 +1353,7 @@ async function showMsg() {
 function readShareCode() {
   console.log(`开始`)
   return new Promise(async resolve => {
-    $.get({url: `http://transfer.nz.lu/jxfactory`, timeout: 10000}, (err, resp, data) => {
+    $.get({url: `http://123/jxfactory`, timeout: 10000}, (err, resp, data) => {
       try {
         if (err) {
           console.log(JSON.stringify(err))
