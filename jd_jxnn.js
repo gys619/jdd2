@@ -1,6 +1,6 @@
 /**
 惊喜牛牛
-cron 23 0-23/3 * * * jd_jxnn.js
+cron=23 0-23/3 * * * jd_jxnn.js
 */
 // prettier-ignore
 !function (t, r) { "object" == typeof exports ? module.exports = exports = r() : "function" == typeof define && define.amd ? define([], r) : t.CryptoJS = r() }(this, function () {
