@@ -26,24 +26,6 @@ let appId = '1EFRXxg' , homeDataFunPrefix = 'interact_template', collectScoreFun
 let lotteryResultFunPrefix = homeDataFunPrefix, browseTime = 6
 const inviteCodes = [
  
-];
-const randomCount = $.isNode() ? 20 : 5;
-const notify = $.isNode() ? require('./sendNotify') : '';
-let merge = {}
-//IOS等用户直接用NobyDa的jd cookie
-let cookiesArr = [], cookie = '';
-if ($.isNode()) {
-  Object.keys(jdCookieNode).forEach((item) => {
-    cookiesArr.push(jdCookieNode[item])
-  })
-  if (process.env.JD_DEBUG && process.env.JD_DEBUG === 'false') console.log = () => {};
-} else {
-  cookiesArr = [$.getdata('CookieJD'), $.getdata('CookieJD2'), ...jsonParse($.getdata('CookiesJD') || "[]").map(item => item.cookie)].filter(item => !!item);
-}
-const JD_API_HOST = `https://api.m.jd.com/client.action`;
-!(async () => {
-  if (!cookiesArr[0]) {
-    $.msg($.name, '【提示】请先获取cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/', {"open-url": "https://bean.m.jd.com/"});
     return;
   }
   await requireConfig();

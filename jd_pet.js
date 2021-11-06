@@ -31,60 +31,6 @@ let cookiesArr = [], cookie = '', jdPetShareArr = [], isBox = false, notify, new
 //下面给出两个账号的填写示例（iOS只支持2个京东账号）
 let shareCodes = [ // IOS本地脚本用户这个列表填入你要助力的好友的shareCode
  
-]
-let message = '', subTitle = '', option = {};
-let jdNotify = false;//是否关闭通知，false打开通知推送，true关闭通知推送
-const JD_API_HOST = 'https://api.m.jd.com/client.action';
-let goodsUrl = '', taskInfoKey = [];
-let randomCount = $.isNode() ? 20 : 5;
-!(async () => {
-  await requireConfig();
-  if (!cookiesArr[0]) {
-    $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
-    return;
-  }
-  for (let i = 0; i < cookiesArr.length; i++) {
-    if (cookiesArr[i]) {
-      cookie = cookiesArr[i];
-      $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
-      $.index = i + 1;
-      $.isLogin = true;
-      $.nickName = '';
-      await TotalBean();
-      console.log(`\n开始【京东账号${$.index}】${$.nickName || $.UserName}\n`);
-      if (!$.isLogin) {
-        $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
-
-        if ($.isNode()) {
-          await notify.sendNotify(`${$.name}cookie已失效 - ${$.UserName}`, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`);
-        }
-        continue
-      }
-      message = '';
-      subTitle = '';
-      goodsUrl = '';
-      taskInfoKey = [];
-      option = {};
-      await shareCodesFormat();
-      await jdPet();
-    }
-  }
-  if ($.isNode() && allMessage && $.ctrTemp) {
-    await notify.sendNotify(`${$.name}`, `${allMessage}`)
-  }
-})()
-    .catch((e) => {
-      $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
-    })
-    .finally(() => {
-      $.done();
-    })
-async function jdPet() {
-  try {
-    //查询jd宠物信息
-    const initPetTownRes = await request('initPetTown');
-    message = `【京东账号${$.index}】${$.nickName || $.UserName}\n`;
-    if (initPetTownRes.code === '0' && initPetTownRes.resultCode === '0' && initPetTownRes.message === 'success') {
       $.petInfo = initPetTownRes.result;
       if ($.petInfo.userStatus === 0) {
         // $.msg($.name, '', `【提示】京东账号${$.index}${$.nickName || $.UserName}\n萌宠活动未开启\n请手动去京东APP开启活动\n入口：我的->游戏与互动->查看更多开启`, { "open-url": "openapp.jdmoble://" });
