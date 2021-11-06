@@ -66,9 +66,9 @@ const JD_API_HOST = `https://api.m.jd.com`;
             console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
         }
         if (!dyjCode) {
-            console.log(`\n环境变量中没有检测到助力码,开始获取【京东账号${$.index}】助力码\n`)
             await open()
             if ($.hotFlag) continue;
+            console.log(`\n环境变量中没有检测到助力码,开始获取【京东账号${$.index}】助力码\n`)
             await getid()
         } else {
             dyjStr = dyjCode.split("@")
@@ -93,7 +93,7 @@ const JD_API_HOST = `https://api.m.jd.com`;
                 cookie = cookiesArr[i];
                 $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
                 $.canRun = true
-                console.log(`\n${$.UserName} 剩余助力去助力作者\n`)
+                console.log(`\n${$.UserName} 去助力 \n`)
                 for (let j = 0; j < $.authorCode.length; j++) {
                     let item = $.authorCode[j];
                     await help(item.redEnvelopeId, item.inviter, 1)
@@ -141,10 +141,12 @@ async function exchange() {
                     console.log(`${$.name} API请求失败，请检查网路重试`);
                 } else {
                     data = JSON.parse(data);
-                    if (data.success && data.data.chatEnvelopeVo.status == 50059) {
-                        console.log(`【京东账号${$.index}】${data.data.chatEnvelopeVo.message} ，尝试兑换红包...`)
-                        $.rewardType = 1
-                        await exchange()
+                    if (data.success && data.data) {
+                        if (data.data.chatEnvelopeVo.status == 50053 || data.data.chatEnvelopeVo.status == 50059) {
+                            console.log(`【京东账号${$.index}】${data.data.chatEnvelopeVo.message} ，尝试兑换红包...`)
+                            $.rewardType = 1
+                            await exchange()
+                        }
                     } else {
                         console.log(`【京东账号${$.index}】提现成功`)
                     }

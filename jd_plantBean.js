@@ -34,6 +34,60 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
 //下面给出两个账号的填写示例（iOS只支持2个京东账号）
 let shareCodes = [ // IOS本地脚本用户这个列表填入你要助力的好友的shareCode
  
+]
+let allMessage = ``;
+let currentRoundId = null;//本期活动id
+let lastRoundId = null;//上期id
+let roundList = [];
+let awardState = '';//上期活动的京豆是否收取
+let randomCount = $.isNode() ? 20 : 5;
+let num;
+!(async () => {
+  await requireConfig();
+  if (!cookiesArr[0]) {
+    $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
+    return;
+  }
+  for (let i = 0; i < cookiesArr.length; i++) {
+    if (cookiesArr[i]) {
+      cookie = cookiesArr[i];
+      $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
+      $.index = i + 1;
+      $.isLogin = true;
+      $.nickName = '';
+      await TotalBean();
+      console.log(`\n开始【京东账号${$.index}】${$.nickName || $.UserName}\n`);
+      if (!$.isLogin) {
+        $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
+
+        if ($.isNode()) {
+          await notify.sendNotify(`${$.name}cookie已失效 - ${$.UserName}`, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`);
+        }
+        continue
+      }
+      message = '';
+      subTitle = '';
+      option = {};
+      await shareCodesFormat();
+      await jdPlantBean();
+      await showMsg();
+    }
+  }
+  if ($.isNode() && allMessage) {
+    await notify.sendNotify(`${$.name}`, `${allMessage}`)
+  }
+})().catch((e) => {
+  $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
+}).finally(() => {
+  $.done();
+})
+
+async function jdPlantBean() {
+  try {
+    console.log(`获取任务及基本信息`)
+    await plantBeanIndex();
+    if ($.plantBeanIndexResult.errorCode === 'PB101') {
+      console.log(`\n活动太火爆了，还是去买买买吧！\n`)
       return
     }
     for (let i = 0; i < $.plantBeanIndexResult.data.roundList.length; i++) {
