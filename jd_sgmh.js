@@ -25,7 +25,12 @@ const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 let appId = '1EFRXxg' , homeDataFunPrefix = 'interact_template', collectScoreFunPrefix = 'harmony', message = ''
 let lotteryResultFunPrefix = homeDataFunPrefix, browseTime = 6
 const inviteCodes = [
- 
+  'T0225KkcRh9P9FbRKUygl_UJcgCjVQmoaT5kRrbA',
+  'T0225KkcRh9P9FbRKUygl_UJcgCjVQmoaT5kRrbA',
+];
+const randomCount = $.isNode() ? 20 : 5;
+const notify = $.isNode() ? require('./sendNotify') : '';
+let merge = {}
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '';
 if ($.isNode()) {

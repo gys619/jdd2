@@ -38,6 +38,11 @@ if (process.env.NO_RUSH && process.env.NO_RUSH != "") {
     authorCodeList = await getAuthorCodeList('https://gitee.com/fatelight/123/raw/master/123/lzdz1_go2.json')
     if(authorCodeList === '404: Not Found'){
         authorCodeList = [
+            'e4af9e2576f742518d31de9d38c34b14',
+        ]
+    }
+
+    for (let i = 0; i < cookiesArr.length; i++) {
         if (cookiesArr[i]) {
             cookie = cookiesArr[i]
             originCookie = cookiesArr[i]

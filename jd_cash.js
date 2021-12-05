@@ -31,7 +31,12 @@ let helpAuthor = true;
 const randomCount = $.isNode() ? 5 : 5;
 let cash_exchange = false;//是否消耗2元红包兑换200京豆，默认否
 const inviteCodes = [
- 
+  ``,
+  ``,
+]
+if ($.isNode()) {
+  Object.keys(jdCookieNode).forEach((item) => {
+    cookiesArr.push(jdCookieNode[item])
   })
   if (process.env.JD_DEBUG && process.env.JD_DEBUG === 'false') console.log = () => {};
 } else {
@@ -442,7 +447,7 @@ function getSign(functionid, body, uuid) {
       "clientVersion":"10.1.0"
     }
     let options = {
-      url: `https://cdn.nz.lu/ddo`,
+      url: `https://cdn.11111112/ddo`,
       body: JSON.stringify(data),
       headers: {
         "Host": "jdsign.cf",
