@@ -1,0 +1,16 @@
+version: "3.1"
+
+services:
+  unicom-task:
+    image: wuye9999/unicom-task:latest
+    restart: always
+    command:
+      - /bin/bash
+      - -c
+      - |
+         service cron start
+         sleep infinity
+    volumes:
+      - v /unicom-task/config:/root/config
+      - v /unicom-task/log:/root/log
+      - v /unicom-task/unicom-task:/root/unicom-task
