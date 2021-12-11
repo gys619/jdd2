@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 # @Time    : 2021/12/11 16:30
 # @Author  : wuye9999
-# 手厅 沃邮箱扭蛋机
+# 手厅 沃邮箱12.12锦鲤送话费
 import os,sys
 import requests,json,time,re,login,logging,traceback,os,random,datetime,util
 
-class womail_apsule_machine:
+class Koi_phone_bill:
     def run(self, client, user):
         self.client=client
         self.user=user
@@ -13,19 +13,18 @@ class womail_apsule_machine:
 
         try:
             mobile,refererurl=self.openPlatLineNew() # 登录1
-            self.lotterylogin(refererurl)
+            self.summer1login(refererurl)
             self.callback(mobile,refererurl)    # 获取token
             self.userInfo()
             self.user_chance()
             self.overtask()                     # 做任务
             self.draw()                         # 抽奖
         except Exception as e:
-            logging.error(f"【沃邮箱扭蛋机】：错误\n{e}")
-
+            logging.error(f"【锦鲤送话费】：错误\n{e}")
 
     # 登录1
     def openPlatLineNew(self):
-        url=f"https://m.client.10010.com//mobileService/openPlatform/openPlatLineNew.htm?to_url=https://user.mail.wo.cn/cu-email/mobile/jump&yw_code=&desmobile={self.user.get('username')}&version=android@8.0805"   
+        url=f"https://m.client.10010.com///mobileService/openPlatform/openPlatLineNew.htm?to_url=https://user.mail.wo.cn/cu-email/mobile/jump11&yw_code=&desmobile={self.user['username']}&version=android@8.0805"   
         headers={
             'pragma': 'no-cache',
             'cache-control': 'no-cache',
@@ -48,9 +47,9 @@ class womail_apsule_machine:
             # logging.info(res.url)
             return mobile,res.url
         except Exception as e:
-            logging.error(f"【沃邮箱扭蛋机】：验证登录失败\n{e}")
+            logging.error(f"【锦鲤送话费】：验证登录失败\n{e}")
 
-    def lotterylogin(self,url):
+    def summer1login(self,url):
         self.client.headers={
             'pragma': 'no-cache',
             'cache-control': 'no-cache',
@@ -68,22 +67,22 @@ class womail_apsule_machine:
     # 获取token
     def callback(self,mobile,refererurl):
         # self.session=requests.session()
-        url=f"https://activity.mail.wo.cn/cn/lottery/login/callback.do?mobile={mobile}"
         self.client.headers.update({
             'referer': refererurl
         })
+        url=f"https://activity.mail.wo.cn/cn/summer1/login/callback.do?mobile={mobile}"
         res=self.client.get(url)
         if 'Set-Cookie' in res.headers or 'set-cookie' in res.headers:
             return True
         else:
-            logging.info("【沃邮箱扭蛋机】： 获取token失败")
+            logging.info("【锦鲤送话费】： 获取token失败")
 
     def userInfo(self):
-        url=f"https://activity.mail.wo.cn/cn/lottery/login/userInfo.do?t={str(int(time.time() * 1000))}"
+        url=f"https://activity.mail.wo.cn/cn/summer1/login/userInfo.do?t={str(int(time.time() * 1000))}"
         res=self.client.get(url)
 
     def user_chance(self):
-        url=f"https://activity.mail.wo.cn/cn/lottery/user/chance.do?t={str(int(time.time() * 1000))}"
+        url=f"https://activity.mail.wo.cn/cn/summer1/user/chance.do?t={str(int(time.time() * 1000))}"
         res=self.client.get(url)
 
     # 已完成任务列表
@@ -94,7 +93,7 @@ class womail_apsule_machine:
             'wodisk': '速览沃云盘优势',
         }
         overtask_list=list()
-        url=f"https://activity.mail.wo.cn/cn/lottery/user/overtask.do?t=?t={str(int(time.time() * 1000))}"
+        url=f"https://activity.mail.wo.cn/cn/summer1/user/overtask.do?t=?t={str(int(time.time() * 1000))}"
         res=self.client.get(url).json()
 
         for task in res['result']:
@@ -103,27 +102,27 @@ class womail_apsule_machine:
             overtask_list.append(taskName)
 
         for taskName,taskid in tasks_dict.items():
-            logging.info(f"【沃邮箱扭蛋机】：开始任务 {taskid}")
+            logging.info(f"【锦鲤送话费】：开始任务 {taskid}")
             if taskName not in overtask_list:
                 self.dotask(taskName)
             else:
-                logging.info("【沃邮箱扭蛋机】： 任务已做过了")
+                logging.info("【锦鲤送话费】： 任务已做过了")
 
     # 做任务
     def dotask(self,taskName):
-        url=f"https://activity.mail.wo.cn/cn/lottery/user/doTask.do?taskName={taskName}"
+        url=f"https://activity.mail.wo.cn/cn/summer1/user/doTask.do?taskName={taskName}"
         res=self.client.get(url).json()
         if res['msg']==None:
-            logging.info("【沃邮箱扭蛋机】： 任务成功")
+            logging.info("【锦鲤送话费】： 任务成功")
         else:
-            logging.info(f"【沃邮箱扭蛋机】： {res.get('msg','任务失败')}")
+            logging.info(f"【锦鲤送话费】： {res.get('msg','任务失败')}")
 
     # 抽奖
     def draw(self):
-        url=f"https://activity.mail.wo.cn/cn/lottery/draw/draw.do?t={str(int(time.time() * 1000))}"
+        url=f"https://activity.mail.wo.cn/cn/summer1/draw/draw.do?t={str(int(time.time() * 1000))}"
         res=self.client.get(url).json()
         if res['success']:
-            logging.info(f"【沃邮箱扭蛋机】： 抽到 {res['result'].get('prizeTitle','空气')}")
+            logging.info(f"【锦鲤送话费】： 抽到 {res['result'].get('prizeTitle','空气')}")
             return self.draw()
         else:
-            logging.info(f"【沃邮箱扭蛋机】：{res['msg']}")
+            logging.info(f"【锦鲤送话费】：{res['msg']}")

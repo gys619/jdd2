@@ -47,6 +47,7 @@ except Exception as e:
 if not (os.path.abspath('.')=='/var/user' and os.path.exists('/tmp')):
     try:
         import Cryptodome
+        from Cryptodome.Cipher import AES
     except Exception as e:
         print(str(e) + "\n缺少Cryptodome模块, 请执行命令：pip3 install pycryptodomex\n")
         exit()
@@ -203,6 +204,8 @@ def runTask(client, user):
     for task_name in task_list:
         if task_name=='email_task.py':
             continue
+        if task_name=='game_signin.py':     # 暂停游戏频道打卡
+            continue
         if not (os.path.abspath('.')=='/var/user' and os.path.exists('/tmp')):
             if task_name=='dailySign.py':
                 continue
@@ -273,7 +276,11 @@ class sendNotice:
         with open(log_path('log.txt'), encoding='utf-8') as f:
             for line in f.readlines():
                 content += line
-        send('unicom_task',content)
+        try:
+            send('unicom_task',content)
+        except:
+            print('推送失败，请检查网络连接')
+
 
 #腾讯云函数入口
 def main_handler(event, context):
