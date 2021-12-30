@@ -1,16 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 '''
-cron: 30 0,15 * * *
+cron: 35 20 * * *
 new Env('发财挖宝');
-活动入口：京东极速版>我的>发财挖宝
-脚本功能为:玩一玩得1血，内部互助，挖宝，提现
-由于每个号只有两次助力机会，所以只助力前两个助力码
+活动入口: 京东极速版>我的>发财挖宝
+脚本功能为: 挖宝，提现，没有助力功能! 
 当血量剩余 1 时停止挖宝，领取奖励并提现
-环境变量：JD_COOKIE，wabao_spring
-export JD_COOKIE="第1个cookie&第2个cookie"
-export wabao_spring="是否自动领取奖励并提现微信红包，yes或no,不填则默认yes领取奖励并提现微信红包"
-11 13 12:00 添加玩一玩任务，更新linkId
 '''
 import os,json,random,time,re,string,functools,asyncio
 import sys
@@ -22,8 +17,7 @@ except Exception as e:
 requests.packages.urllib3.disable_warnings()
 
 
-run_send='yes'          # yes或no, yes则启用通知推送服务
-wabao_spring='yes'      # 是否自动领取奖励并提现,环境变量优先于脚本内部变量
+run_send='no'          # yes或no, yes则启用通知推送服务
 linkId="pTTvJeSTrpthgk9ASBVGsw"
 
 
@@ -210,9 +204,9 @@ def happyDigHome(cookie):
     if res['code']==0:
         if res['success']:
             curRound=res['data']['curRound']                        # 未知
-            blood=res['data']['blood']                              # 剩余血量
+            incep_blood=res['data']['blood']                              # 剩余血量
             roundList=res['data']['roundList']                      # 3个总池子
-            for roundList_n in roundList:                           # 迭代每个池子
+            for e,roundList_n in enumerate(roundList):                           # 迭代每个池子
                 roundid=roundList_n['round']                        # 池序号
                 state=roundList_n['state'] 
                 rows=roundList_n['rows']                            # 池规模，rows*rows
@@ -225,16 +219,20 @@ def happyDigHome(cookie):
                 msg(f'当前池序号为 {roundid} \n当前池规模为 {rows}*{rows}')
                 msg(f'剩余血量 {a[0]}')
                 msg(f'当前池已得京东红包 {a[2]}\n当前池已得微信红包 {a[1]}\n')
-       
-                if (_blood:=xueliang(cookie))>1:
+                _blood=xueliang(cookie)
+                if _blood>1  or incep_blood>=21:
                     happyDigDo(cookie,roundid,0,0)
-                    for n in range(roundid+3):
-                        for i in range(roundid+3):
-                            if (_blood:=xueliang(cookie))>1:
+                    if e==0 or e==1:
+                        roundid_n=4
+                    else:
+                        roundid_n=5
+                    for n in range(roundid_n):
+                        for i in range(roundid_n):
+                            _blood=xueliang(cookie)
+                            if _blood>1  or incep_blood>=21:
                                 msg(f'当前血量为 {_blood} 健康，继续挖宝')
                                 msg(f'本次挖取坐标为 ({n},{i})')
                                 happyDigDo(cookie,roundid,n,i)
-                                
                             else:
                                 a=jinge(cookie,roundid)
                                 msg(f'当前血量为 {_blood} 不健康，结束该池挖宝')
@@ -421,16 +419,11 @@ def main():
 
     msg(f'====================共{len(cookie_list)}京东个账号Cookie=========\n')
 
-    tasksss=[]
     for e,cookie in enumerate(cookie_list,start=1):
         msg(f'******开始【账号 {e}】 {get_pin(cookie)} *********\n')
         happyDigHome(cookie)
-        if get_env('wabao_spring')=='yes':
-            spring_reward_list(cookie)
+        spring_reward_list(cookie)
         
-    msg('作者：wuye9999\n')
-    msg('地址:https://github.com/wuye999/myScripts')
-
     if run_send=='yes':
         send('### 发财挖宝 ###')   # 通知服务
 
