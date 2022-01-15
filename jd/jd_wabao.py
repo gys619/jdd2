@@ -345,7 +345,7 @@ def spring_reward_list(cookie):
     happyDigExchange(cookie)
     xueliang(cookie)
     
-    body={"linkId":linkId,"pageNum":1,"pageSize":10}
+    body={"linkId":linkId,"pageNum":1,"pageSize":6}
     res=taskGetUrl("spring_reward_list", body, cookie)
     
     if res['code']==0:
@@ -358,7 +358,7 @@ def spring_reward_list(cookie):
                 poolBaseId=_items['poolBaseId']
                 prizeGroupId=_items['prizeGroupId']
                 prizeBaseId=_items['prizeBaseId']
-                if '极速版签到返红包' not in prizeDesc:
+                if '红包' not in prizeDesc:
                     msg('尝试微信提现')
                     time.sleep(3.2)
                     wecat(cookie,amountid,poolBaseId,prizeGroupId,prizeBaseId)
